@@ -12,7 +12,7 @@ const events = ref(props.v_events);
       <div class="px-2 py-2">
         <p class="font-bold">{{ event.title }}</p>
 <!--        <p>{{ event.startDate }} bis {{ event.endDate }}</p>-->
-        <p>{{ event.description }}</p>
+        <p class="whitespace-pre">{{ event.description }}</p>
       </div>
     </div>
   </div>

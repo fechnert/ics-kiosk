@@ -40,8 +40,8 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-row">
-    <div class="basis-9/12 border-r-2"><Calendar /></div>
-    <div class="basis-3/12"><List :v_events="v_events"/></div>
+    <div class="basis-9/12 border-r-2"><Calendar :v_events="v_events" /></div>
+    <div class="basis-3/12"><List :v_events="v_events" /></div>
   </div>
 </template>
 
