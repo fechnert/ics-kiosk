@@ -2,17 +2,17 @@
 import { ref, onMounted } from 'vue';
 import * as ICAL from "ical.js";
 
-import Calendar from "@/Calendar.vue";
-import List from "@/List.vue";
+import EventCalendar from "@/components/EventCalendar.vue";
+import EventList from "@/components/EventList.vue";
 
-const v_calendar = "";
-const v_content = ref();
-const v_events = ref([]);
+const vCalendar = "";
+const vContent = ref();
+const vEvents = ref([]);
 
 function load() {
-  fetch(v_calendar).then(async (response) => {
-    v_content.value = await response.text();
-    let jCal = ICAL.parse(v_content.value);
+  fetch(vCalendar).then(async (response) => {
+    vContent.value = await response.text();
+    let jCal = ICAL.parse(vContent.value);
 
     let comp = new ICAL.Component(jCal);
     let vevents = comp.getAllSubcomponents("vevent");
@@ -20,7 +20,7 @@ function load() {
     vevents.forEach(function(vevent) {
       let event = new ICAL.Event(vevent)
 
-      v_events.value.push({
+      vEvents.value.push({
         "uid": event.uid,
         "title": event.summary,
         "description": event.description,
@@ -40,8 +40,12 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-row">
-    <div class="basis-9/12 border-r-2"><Calendar :v_events="v_events" /></div>
-    <div class="basis-3/12"><List :v_events="v_events" /></div>
+    <div class="basis-9/12 border-r-2">
+      <EventCalendar :v-events="vEvents" />
+    </div>
+    <div class="basis-3/12">
+      <EventList :v-events="vEvents" />
+    </div>
   </div>
 </template>
 

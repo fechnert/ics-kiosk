@@ -1,13 +1,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { add, sub, min, max, setDefaultOptions, addDays, format, isToday, eachDayOfInterval, startOfDay, startOfWeek, startOfMonth, getWeekOfMonth, getWeeksInMonth, isFirstDayOfMonth, isLastDayOfMonth, isMonday } from "date-fns";
+import { add, sub, min, max, setDefaultOptions, format, isToday, eachDayOfInterval, startOfDay, startOfWeek, startOfMonth, getWeekOfMonth, getWeeksInMonth, isFirstDayOfMonth, isLastDayOfMonth, isMonday } from "date-fns";
 import { de } from "date-fns/locale";
 
 setDefaultOptions({ weekStartsOn: 1 })
 
 const daysToDisplay = ref([]);
-const props = defineProps(['v_events']);
-const allEvents = ref(props.v_events);
+const props = defineProps({vEvents: {type: Array, default: Array}});
+const allEvents = ref(props.vEvents);
 
 const relevantEvents = computed(() => {
   let events = {};
@@ -72,46 +72,68 @@ onMounted(() => {
 </script>
 
 <template>
-
   <div class="h-screen flex flex-col divide-y">
-
     <!-- temp manipulate -->
     <div>
       <p>
-        <button @click="prevMonth()"> << Prev </button>
+        <button @click="prevMonth()">
+          &lt;&lt; Prev
+        </button>
         <span>Month</span>
-        <button @click="nextMonth()"> Next >> </button>
+        <button @click="nextMonth()">
+          Next &gt;&gt;
+        </button>
       </p>
       <p>
-        <button @click="prevWeek()"> << Prev </button>
+        <button @click="prevWeek()">
+          &lt;&lt; Prev
+        </button>
         <span>Week</span>
-        <button @click="nextWeek()"> Next >> </button>
+        <button @click="nextWeek()">
+          Next &gt;&gt;
+        </button>
       </p>
     </div>
 
     <!-- week header -->
     <div class="grid grid-cols-7 divide-x">
-      <div v-for="day in daysToDisplay.slice(0,7)" class="px-2">
-        <p class="font-bold">{{ format(day, 'E', {locale: de}) }}</p>
+      <div
+        v-for="day in daysToDisplay.slice(0,7)"
+        :key="day"
+        class="px-2"
+      >
+        <p class="font-bold">
+          {{ format(day, 'E', {locale: de}) }}
+        </p>
       </div>
     </div>
 
     <!-- weeks -->
     <div class="grid grid-cols-7 grow divide-x">
-      <div v-for="day in daysToDisplay" class="border-b" :class="getBorder(day)">
-        <p :class="{'font-bold': isToday(day)}" class="p-2">
+      <div
+        v-for="day in daysToDisplay"
+        :key="day"
+        class="border-b"
+        :class="getBorder(day)"
+      >
+        <p
+          :class="{'font-bold': isToday(day)}"
+          class="p-2"
+        >
           {{ format(day, 'd. MMMM', {locale: de}) }}
         </p>
-        <p v-for="event in relevantEvents[startOfDay(day)]" class="bg-red-400 rounded-md mx-1 mb-2 px-1">
+        <p
+          v-for="event in relevantEvents[startOfDay(day)]"
+          :key="event.uid"
+          class="bg-red-400 rounded-md mx-1 mb-2 px-1"
+        >
           {{ event.title }}
         </p>
       </div>
     </div>
-
   </div>
 
   <div>
     <pre>{{ relevantEvents }}</pre>
   </div>
-
 </template>
