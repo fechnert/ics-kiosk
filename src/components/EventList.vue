@@ -1,12 +1,25 @@
 <script setup>
-import { ref } from 'vue';
-import { setDefaultOptions, format } from "date-fns";
+import { ref, computed } from 'vue';
+import { setDefaultOptions, format, compareDesc } from "date-fns";
 import { de } from "date-fns/locale";
 
 setDefaultOptions({ weekStartsOn: 1, locale: de})
 
-const props = defineProps({vEvents: {type: Array, default: Array}});
-const events = ref(props.vEvents);
+const props = defineProps({calendarEvents: {type: Array, default: Array}});
+const calendarEvents = ref(props.calendarEvents);
+
+const chronologicalEvents = computed(() => {
+  let allEvents = [];
+  Object.entries(calendarEvents.value).forEach(([url, events]) => {
+    allEvents.push(...events)
+  })
+
+  allEvents.sort(function(a, b) {
+    return compareDesc(a.startDate, b.startDate)
+  }).reverse();
+
+  return allEvents;
+})
 
 </script>
 
@@ -14,9 +27,10 @@ const events = ref(props.vEvents);
   <div class="pt-4 h-screen overflow-hidden">
     <div class="flex flex-col gap-4">
       <div
-        v-for="event in events"
+        v-for="event in chronologicalEvents"
         :key="event.uid"
-        class="flex flex-row py-2 bg-white drop-shadow rounded mx-4 border-l-4 border-red-400"
+        class="flex flex-row py-2 bg-white drop-shadow rounded mx-4 border-l-4"
+        :style="'border-color: '+event.color+';'"
       >
         <!-- date & time -->
         <div class="w-28">

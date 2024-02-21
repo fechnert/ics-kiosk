@@ -5,24 +5,28 @@ import { de } from "date-fns/locale";
 
 setDefaultOptions({ weekStartsOn: 1 , locale: de})
 
-const daysToDisplay = ref([]);
-const props = defineProps({vEvents: {type: Array, default: Array}});
-const allEvents = ref(props.vEvents);
+const props = defineProps({calendarEvents: {type: Array, default: Array}});
+const calendarEvents = ref(props.calendarEvents);
 
+const daysToDisplay = ref([]);
 const relevantEvents = computed(() => {
   let events = {};
   let s = min(daysToDisplay.value);
   let e = max(daysToDisplay.value);
-  allEvents.value.forEach((event) => {
-    if (event.endDate >= s && event.startDate <= e) {
-      let d = startOfDay(event.startDate);
-      if (d in events) {
-        events[d].push(event);
-      } else {
-        events[d] = [event];
+
+  Object.entries(calendarEvents.value).forEach(([url, calendarEvents]) => {
+    calendarEvents.forEach((event) => {
+      if (event.endDate >= s && event.startDate <= e) {
+        let d = startOfDay(event.startDate);
+        if (d in events) {
+          events[d].push(event);
+        } else {
+          events[d] = [event];
+        }
       }
-    }
-  })
+    })
+  });
+
   return events;
 });
 
@@ -109,7 +113,8 @@ onMounted(() => {
             <p
               v-for="event in relevantEvents[startOfDay(day)]"
               :key="event.uid"
-              class="bg-red-400 rounded-md mx-1 mb-2 px-1 text-nowrap truncate"
+              class="rounded-md mx-1 mb-2 px-1 text-nowrap truncate"
+              :style="'background-color: '+event.color+';'"
             >
               {{ event.title }}
             </p>
