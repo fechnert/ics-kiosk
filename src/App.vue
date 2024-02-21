@@ -39,8 +39,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-row">
-    <div class="basis-9/12 border-r-2">
+  <div class="flex flex-row bg-gray-100">
+    <div class="basis-9/12">
       <EventCalendar :v-events="vEvents" />
     </div>
     <div class="basis-3/12">
