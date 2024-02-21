@@ -1,6 +1,6 @@
 # ics-kiosk
 
-Lightweight web app to display ics subscriptions on a kiosk monitor
+Lightweight web app to display customizable ics subscriptions on a kiosk monitor.
 
 
 # Todo
