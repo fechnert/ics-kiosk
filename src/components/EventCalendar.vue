@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { add, sub, min, max, setDefaultOptions, format, isToday, eachDayOfInterval, startOfDay, startOfWeek, startOfMonth, getWeekOfMonth, getWeeksInMonth, isFirstDayOfMonth, isLastDayOfMonth, isMonday } from "date-fns";
+import { add, sub, min, max, setDefaultOptions, format, isToday, eachDayOfInterval, startOfDay, startOfWeek, isThisMonth } from "date-fns";
 import { de } from "date-fns/locale";
 
 setDefaultOptions({ weekStartsOn: 1 , locale: de})
@@ -32,12 +32,10 @@ const relevantEvents = computed(() => {
 
 let pointer = new Date();
 
-function getBorder(day) {
+function getTileStyle(day) {
   return {
-    'border-b border-b-2 border-b-black': (getWeekOfMonth(day) === getWeeksInMonth(day)),
-    'border-t border-t-2 border-t-black': (getWeekOfMonth(day) === 1 && !isMonday(startOfMonth(day))),
-    'border-l border-l-2 border-l-black': (isFirstDayOfMonth(day) && !isMonday(day)),
-    'border-r-0': (isLastDayOfMonth(day)),
+    'bg-slate-100 text-slate-500': (!isThisMonth(day)),
+    'bg-amber-100': isToday(day),
   }
 }
 
@@ -69,6 +67,11 @@ function nextWeek() {
   setCalendar();
 }
 
+function reset() {
+  pointer = new Date();
+  setCalendar();
+}
+
 onMounted(() => {
   setCalendar();
 })
@@ -77,6 +80,38 @@ onMounted(() => {
 
 <template>
   <div class="h-screen py-4 pl-4">
+    <div class="mb-2 flex justify-center gap-2">
+      <button
+        class="rounded px-2 py-1 bg-white shadow"
+        @click="prevMonth()"
+      >
+        &lt;&lt; month
+      </button>
+      <button
+        class="rounded px-2 py-1 bg-white shadow"
+        @click="prevWeek()"
+      >
+        &lt;&lt; week
+      </button>
+      <button
+        class="rounded px-2 py-1 bg-white shadow"
+        @click="reset()"
+      >
+        RESET
+      </button>
+      <button
+        class="rounded px-2 py-1 bg-white shadow"
+        @click="nextWeek()"
+      >
+        week >>
+      </button>
+      <button
+        class="rounded px-2 py-1 bg-white shadow"
+        @click="nextMonth()"
+      >
+        month >>
+      </button>
+    </div>
     <div class="h-full bg-white rounded drop-shadow">
       <div class="h-full flex flex-col divide-y">
         <!-- week header -->
@@ -102,7 +137,7 @@ onMounted(() => {
           <div
             v-for="day in daysToDisplay.slice((week-1)*7, 7+((week-1)*7))"
             :key="day"
-            :class="getBorder(day)"
+            :class="getTileStyle(day)"
           >
             <p
               :class="{'font-bold': isToday(day)}"
@@ -113,7 +148,7 @@ onMounted(() => {
             <p
               v-for="event in relevantEvents[startOfDay(day)]"
               :key="event.uid"
-              class="rounded-md mx-1 mb-2 px-1 text-nowrap truncate"
+              class="rounded-md mx-1 mb-2 px-1 text-nowrap truncate font-semibold"
               :style="'background-color: '+event.color+';'"
             >
               {{ event.title }}
