@@ -7,6 +7,8 @@ setDefaultOptions({ weekStartsOn: 1 , locale: de})
 
 const props = defineProps({calendarEvents: {type: Array, default: Array}});
 
+const debug = false;
+
 const daysToDisplay = ref([]);
 const relevantEvents = computed(() => {
   let events = {};
@@ -76,8 +78,20 @@ onMounted(() => {
 </script>
 
 <template>
+  <router-link
+    :to="{name: 'conf'}"
+    class="fixed bottom-2 left-2 bg-white h-10 w-10 z-10 flex justify-center items-center rounded shadow"
+  >
+    <div class="static">
+      &#9881;&#65039;
+    </div>
+  </router-link>
+
   <div class="h-screen py-4 pl-4">
-    <div class="mb-2 flex justify-center gap-2">
+    <div
+      v-if="debug"
+      class="mb-2 flex justify-center gap-2"
+    >
       <button
         class="rounded px-2 py-1 bg-white shadow"
         @click="prevMonth()"
@@ -124,8 +138,6 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- weeks -->
-
         <div
           v-for="week in 5"
           :key="week"
@@ -145,7 +157,7 @@ onMounted(() => {
             <p
               v-for="event in relevantEvents[startOfDay(day)]"
               :key="event.uid"
-              class="rounded-md mx-1 mb-2 px-1 text-nowrap truncate font-semibold"
+              class="rounded-md mx-1 mb-2 px-1 text-nowrap truncate font-semibold text-black"
               :style="'background-color: '+event.color+';'"
             >
               {{ event.title }}
