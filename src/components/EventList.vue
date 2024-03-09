@@ -6,13 +6,10 @@ import { de } from "date-fns/locale";
 setDefaultOptions({ weekStartsOn: 1, locale: de})
 
 const props = defineProps({calendarEvents: {type: Array, default: Array}});
-const calendarEvents = ref(props.calendarEvents);
 
 const chronologicalEvents = computed(() => {
-  let allEvents = [];
-  Object.entries(calendarEvents.value).forEach(([url, events]) => {
-    allEvents.push(...events)
-  })
+
+  let allEvents = props.calendarEvents;
 
   allEvents.sort(function(a, b) {
     return compareDesc(a.startDate, b.startDate)

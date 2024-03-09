@@ -6,7 +6,6 @@ import { de } from "date-fns/locale";
 setDefaultOptions({ weekStartsOn: 1 , locale: de})
 
 const props = defineProps({calendarEvents: {type: Array, default: Array}});
-const calendarEvents = ref(props.calendarEvents);
 
 const daysToDisplay = ref([]);
 const relevantEvents = computed(() => {
@@ -14,17 +13,15 @@ const relevantEvents = computed(() => {
   let s = min(daysToDisplay.value);
   let e = max(daysToDisplay.value);
 
-  Object.entries(calendarEvents.value).forEach(([url, calendarEvents]) => {
-    calendarEvents.forEach((event) => {
-      if (event.endDate >= s && event.startDate <= e) {
-        let d = startOfDay(event.startDate);
-        if (d in events) {
-          events[d].push(event);
-        } else {
-          events[d] = [event];
-        }
+  props.calendarEvents.forEach((event) => {
+    if (event.endDate >= s && event.startDate <= e) {
+      let d = startOfDay(event.startDate);
+      if (d in events) {
+        events[d].push(event);
+      } else {
+        events[d] = [event];
       }
-    })
+    }
   });
 
   return events;

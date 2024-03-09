@@ -1,33 +1,38 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import * as ICAL from "ical.js";
 import { add } from 'date-fns';
 
 import EventCalendar from "@/components/EventCalendar.vue";
 import EventList from "@/components/EventList.vue";
 
-const calendarEvents = ref({});
+const calendarEvents = ref([]);
 const calendarConfiguration = ref([
   {
     url: "",
     order: 1,
-    color: "red",
-    refreshInterval: 300,
+    color: "#ef4444",
+    updateInterval: 300,
     lastUpdate: null,
   },
   {
     url: "",
     order: 2,
-    color: "teal",
-    refreshInterval: 300,
+    color: "#0284c7",
+    updateInterval: 300,
     lastUpdate: null,
   }
 ]);
+
+const shareURL = computed(() => {
+  return btoa(JSON.stringify(calendarConfiguration.value));
+});
 
 function getAllCalendarEvents() {
   let now = new Date();
   let end = add(now, {months: 3})
 
+  calendarEvents.value = [];
   calendarConfiguration.value.forEach((calConf) => {
     fetch(calConf.url).then(async (response) => {
 
@@ -36,11 +41,10 @@ function getAllCalendarEvents() {
       let comp = new ICAL.Component(jCal);
       let vEvents = comp.getAllSubcomponents("vevent");
 
-      calendarEvents.value[calConf.url] = [];
       vEvents.forEach((vEvent) => {
         let event = new ICAL.Event(vEvent);
         if (event.startDate.toJSDate() <= end && event.endDate.toJSDate() >= now) {
-          calendarEvents.value[calConf.url].push({
+          calendarEvents.value.push({
             "uid": event.uid,
             "title": event.summary,
             "description": event.description,
@@ -55,7 +59,7 @@ function getAllCalendarEvents() {
 }
 
 function removeCalendar(index) {
-  calendarEvents.value[calendarConfiguration.value[index].url] = [];
+  calendarEvents.value = [];
   calendarConfiguration.value.splice(index, 1);
   getAllCalendarEvents();
 }
@@ -84,8 +88,8 @@ onMounted(() => {
       <div class="bg-white rounded shadow mx-4 px-2 py-2">
         <div
           v-for="(conf, index) in calendarConfiguration"
-          :key="conf.url"
-          class="flex gap-4 mb-4"
+          :key="conf"
+          class="flex gap-2 mb-4"
         >
           <div>
             <input
@@ -96,7 +100,7 @@ onMounted(() => {
             >
             <label
               :for="'color-' + index"
-              class="w-16 h-full inline-block rounded border shadow"
+              class="w-10 h-full inline-block rounded border shadow"
               :style="'background-color: ' + conf.color + ';'"
             />
           </div>
@@ -104,13 +108,13 @@ onMounted(() => {
             <input
               v-model="conf.url"
               type="text"
-              class="border rounded shadow px-2 truncate w-full"
+              class="border rounded shadow px-2 truncate w-full h-10"
             >
           </div>
           <!-- <div><input type="number" v-model="conf.updateInterval" class="border rounded shadow px-2 w-fit"></div> -->
           <div>
             <button
-              class="border rounded shadow block"
+              class="border rounded shadow block h-10 w-10"
               @click="removeCalendar(index)"
             >
               &#128465;
@@ -130,6 +134,7 @@ onMounted(() => {
           >
             &#10133; Add Calendar
           </button>
+          <input type="text" v-model="shareURL" class="border rounded shadow px-2 truncate" readonly>
         </div>
       </div>
     </div>
@@ -137,10 +142,10 @@ onMounted(() => {
     <!-- calendar & list view -->
     <div class="flex flex-row">
       <div class="basis-9/12">
-        <EventCalendar :calendar-events="calendarEvents" />
+        <EventCalendar :calendarEvents="calendarEvents" />
       </div>
       <div class="basis-3/12">
-        <EventList :calendar-events="calendarEvents" />
+        <EventList :calendarEvents="calendarEvents" />
       </div>
     </div>
   </div>
