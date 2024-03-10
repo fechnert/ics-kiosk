@@ -23,9 +23,18 @@ const shareURL = computed(() => {
   <div class="pt-4 ">
     <div class="bg-white rounded shadow mx-4 px-2 py-2">
       <div
+        v-if="!calendarConfiguration.calendars.length"
+        class="mb-2"
+      >
+        <p class="p-2 text-slate-400">
+          No calendars to configure. Click "Add Calendar" to add one.
+        </p>
+      </div>
+      <div
         v-for="(conf, index) in calendarConfiguration.calendars"
+        v-else
         :key="conf"
-        class="flex gap-2 mb-4"
+        class="flex gap-2 mb-2"
       >
         <div>
           <input
