@@ -11,8 +11,13 @@ Lightweight web app to display customizable ics subscriptions on a kiosk monitor
 - [ ] Reload calendar data regularily
 - [x] Make calendars configurable (color, url)
 - [x] Make configured calendars shareable via simple URL
-- [ ] Events accross multiple days in calendar view
 - [ ] Show times in list view
-- [ ] highlight current day in calendar view
-- [ ] highlight current events in list view
-- [ ] better i18n support
+- [ ] Highlight current events in list view
+- [ ] Persist current calendar configuration to browser
+- [ ] Better i18n support
+
+# Bugs to fix
+
+- [ ] Show events of the current week before the current day again
+- [ ] Show events accross multiple days in calendar view
+- [ ] Find a nicer color for the current day highlight
