@@ -8,8 +8,11 @@ import { calendarConfiguration } from '@/store';
 const router = useRouter()
 const route = useRoute()
 
-const loading = ref(true)
-const loadingError = ref(false)
+const loadingStatus = ref({
+  "loading": true,
+  "error": false,
+  "errorDetails": "",
+})
 
 onMounted(() => {
   let data = route.params.data;
@@ -18,14 +21,14 @@ onMounted(() => {
   try {
     parsedData = JSON.parse(atob(data));
   } catch (error) {
-    loadingError.value = true;
+    loadingStatus.value.error = true;
+    loadingStatus.value.errorDetails = error.toString();
     return
   } finally {
-    loading.value = false;
+    loadingStatus.value.loading = false;
   }
 
   calendarConfiguration.setCalendars(parsedData);
-
   router.push({name: "calendar"})
 })
 
@@ -33,13 +36,16 @@ onMounted(() => {
 
 <template>
   <div class="pt-4">
-    <div class="mx-4 bg-white rounded shadow">
-      <p
-        v-if="loading"
-        class="px-4 py-2"
-      >
-        Loading ...
-      </p>
+    <div class="mx-4 bg-white rounded shadow px-4 py-2">
+      <div v-if="loadingStatus.loading">
+        <p>Loading ...</p>
+      </div>
+      <div v-if="loadingStatus.error">
+        <p>Something went wrong while loading the given data!</p>
+        <pre class="pt-4">{{ loadingStatus.errorDetails }}</pre>
+      </div>
+
+
     </div>
   </div>
 </template>
