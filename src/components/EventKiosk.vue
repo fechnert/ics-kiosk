@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 
 import * as ICAL from "ical.js";
-import { add } from 'date-fns';
+import { add, startOfWeek} from 'date-fns';
 
 import { calendarConfiguration } from '@/store';
 
@@ -11,8 +11,8 @@ import EventList from "@/components/EventList.vue";
 
 const calendarEvents = ref([]);
 
-function addCalendarEvent(now, end, event, startDate, endDate, color) {
-  if (startDate.toJSDate() <= end && endDate.toJSDate() >= now) {
+function addCalendarEvent(start, end, event, startDate, endDate, color) {
+  if (startDate.toJSDate() <= end && endDate.toJSDate() >= start) {
     calendarEvents.value.push({
       "uid": event.uid + "-" + startDate.toICALString(),
       "title": event.summary,
@@ -26,8 +26,8 @@ function addCalendarEvent(now, end, event, startDate, endDate, color) {
 
 function getAllCalendarEvents() {
 
-  let now = new Date();
-  let end = add(now, {months: 3})
+  let start = startOfWeek(new Date());
+  let end = add(start, {months: 3})
 
   calendarEvents.value = [];
   calendarConfiguration.calendars.forEach((calConf) => {
@@ -41,7 +41,7 @@ function getAllCalendarEvents() {
       vEvents.forEach((vEvent) => {
         let event = new ICAL.Event(vEvent);
 
-        addCalendarEvent(now, end, event, event.startDate, event.endDate, calConf.color);
+        addCalendarEvent(start, end, event, event.startDate, event.endDate, calConf.color);
 
         let rrule = vEvent.getFirstProperty('rrule');
         if (rrule) {
@@ -49,7 +49,7 @@ function getAllCalendarEvents() {
           let iter = event.iterator(dtstart)
           for (let next = iter.next(); next && !iter.completed; next = iter.next()) {
             let subEvent = event.getOccurrenceDetails(next);
-            addCalendarEvent(now, end, subEvent.item, subEvent.startDate, subEvent.endDate, calConf.color);
+            addCalendarEvent(start, end, subEvent.item, subEvent.startDate, subEvent.endDate, calConf.color);
           }
         }
       })
