@@ -44,8 +44,6 @@ onMounted(() => {
         <p>Something went wrong while loading the given data!</p>
         <pre class="pt-4">{{ loadingStatus.errorDetails }}</pre>
       </div>
-
-
     </div>
   </div>
 </template>

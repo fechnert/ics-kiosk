@@ -1,4 +1,5 @@
 import { reactive } from 'vue'
+import { v4 as uuidv4 } from 'uuid';
 
 function getRandomColor() {
   return "#" + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
@@ -8,8 +9,8 @@ export const calendarConfiguration = reactive({
   calendars: [],
   addCalendar() {
     this.calendars.push({
+      id: uuidv4(),
       url: "",
-      order: 0,
       color: getRandomColor(),
       updateInterval: 300,
       lastUpdate: null,
