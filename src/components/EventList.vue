@@ -15,7 +15,12 @@ const chronologicalEvents = computed(() => {
     return compareDesc(a.startDate, b.startDate)
   }).reverse();
 
-  return allEvents;
+  let now = new Date();
+  let events = allEvents.filter(e => {
+    return e.endDate >= now;
+  })
+
+  return events;
 })
 
 </script>

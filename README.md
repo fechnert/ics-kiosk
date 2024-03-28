@@ -18,6 +18,6 @@ Lightweight web app to display customizable ics subscriptions on a kiosk monitor
 
 # Bugs to fix
 
-- [ ] Show events of the current week before the current day again
+- [x] Show events of the current week before the current day again
 - [ ] Show events accross multiple days in calendar view
 - [ ] Find a nicer color for the current day highlight
