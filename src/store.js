@@ -12,8 +12,6 @@ export const calendarConfiguration = reactive({
       id: uuidv4(),
       url: "",
       color: getRandomColor(),
-      updateInterval: 300,
-      lastUpdate: null,
     });
   },
   removeCalendar(index = 0) {

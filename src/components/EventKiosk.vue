@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 import * as ICAL from "ical.js";
 import { add, startOfWeek} from 'date-fns';
@@ -9,6 +9,7 @@ import { calendarConfiguration } from '@/store';
 import EventCalendar from "@/components/EventCalendar.vue";
 import EventList from "@/components/EventList.vue";
 
+const lastUpdate = ref();
 const calendarEvents = ref({});
 const globalEventList = computed(() => {
   let eventList = []
@@ -17,6 +18,13 @@ const globalEventList = computed(() => {
   })
   return eventList;
 });
+
+watch(lastUpdate, () => {
+  setTimeout(() => {
+    lastUpdate.value = new Date();
+    getAllCalendarEvents();
+  }, 300 * 1000)
+}, {immediate: true})
 
 function getEventsOfSingleCalendar(calendar) {
 
