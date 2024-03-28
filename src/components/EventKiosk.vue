@@ -11,7 +11,21 @@ import EventList from "@/components/EventList.vue";
 
 const calendarEvents = ref([]);
 
+function addCalendarEvent(now, end, event, startDate, endDate, color) {
+  if (startDate.toJSDate() <= end && endDate.toJSDate() >= now) {
+    calendarEvents.value.push({
+      "uid": event.uid + "-" + startDate.toICALString(),
+      "title": event.summary,
+      "description": event.description,
+      "startDate": startDate.toJSDate(),
+      "endDate": endDate.toJSDate(),
+      "color": color,
+    })
+  }
+}
+
 function getAllCalendarEvents() {
+
   let now = new Date();
   let end = add(now, {months: 3})
 
@@ -26,15 +40,17 @@ function getAllCalendarEvents() {
 
       vEvents.forEach((vEvent) => {
         let event = new ICAL.Event(vEvent);
-        if (event.startDate.toJSDate() <= end && event.endDate.toJSDate() >= now) {
-          calendarEvents.value.push({
-            "uid": event.uid,
-            "title": event.summary,
-            "description": event.description,
-            "startDate": event.startDate.toJSDate(),
-            "endDate": event.endDate.toJSDate(),
-            "color": calConf.color,
-          })
+
+        addCalendarEvent(now, end, event, event.startDate, event.endDate, calConf.color);
+
+        let rrule = vEvent.getFirstProperty('rrule');
+        if (rrule) {
+          let dtstart = vEvent.getFirstPropertyValue('dtstart')
+          let iter = event.iterator(dtstart)
+          for (let next = iter.next(); next && !iter.completed; next = iter.next()) {
+            let subEvent = event.getOccurrenceDetails(next);
+            addCalendarEvent(now, end, subEvent.item, subEvent.startDate, subEvent.endDate, calConf.color);
+          }
         }
       })
     })
