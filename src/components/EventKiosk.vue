@@ -87,10 +87,10 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-row">
-    <div class="basis-9/12">
+    <div class="w-9/12">
       <EventCalendar :calendar-events="globalEventList" />
     </div>
-    <div class="basis-3/12">
+    <div class="w-3/12">
       <EventList :calendar-events="globalEventList" />
     </div>
   </div>

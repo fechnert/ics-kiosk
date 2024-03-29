@@ -12,7 +12,7 @@ Lightweight web app to display customizable ics subscriptions on a kiosk monitor
 - [x] Make calendars configurable (color, url)
 - [x] Make configured calendars shareable via simple URL
 - [x] Update Calendar view on day change
-- [ ] Show times in list view
+- [x] Show times in list view
 - [ ] Highlight current events in list view
 
 

@@ -34,8 +34,8 @@ const chronologicalEvents = computed(() => {
         class="flex flex-row py-2 bg-white drop-shadow rounded mx-4 border-l-4"
         :style="'border-color: '+event.color+';'"
       >
-        <!-- date & time -->
-        <div class="w-28">
+        <!-- date -->
+        <div class="w-2/12">
           <p class="text-center">
             {{ format(event.startDate, 'EEE') }}
           </p>
@@ -48,14 +48,24 @@ const chronologicalEvents = computed(() => {
         </div>
 
         <!-- title & description -->
-        <div class="grow">
+        <div class="w-8/12">
           <p class="font-bold mb-2">
             {{ event.title }}
           </p>
-          <p class="text-info text-slate-500 whitespace-pre">
+          <p class="text-info text-slate-500 whitespace-pre-wrap break-words">
             {{ event.description }}
           </p>
         </div>
+
+        <!-- time -->
+        <div class="w-2/12 pr-2 text-slate-500 flex flex-row justify-end">
+          <div class="max-w-fit pr-2">
+            <p class="text-center">{{ format(event.startDate, 'HH:mm') }}</p>
+            <p class="text-center py-1">bis</p>
+            <p class="text-center">{{ format(event.endDate, 'HH:mm') }}</p>
+          </div>
+        </div>
+
       </div>
     </div>
 
