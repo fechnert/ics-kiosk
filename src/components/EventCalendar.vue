@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { add, sub, min, max, setDefaultOptions, format, isToday, eachDayOfInterval, startOfDay, startOfWeek, isThisMonth } from "date-fns";
 import { de } from "date-fns/locale";
 
@@ -9,6 +9,7 @@ const props = defineProps({calendarEvents: {type: Array, default: Array}});
 
 const debug = false;
 
+const pointer = ref(new Date());
 const daysToDisplay = ref([]);
 const relevantEvents = computed(() => {
   let events = {};
@@ -29,7 +30,15 @@ const relevantEvents = computed(() => {
   return events;
 });
 
-let pointer = new Date();
+watch(pointer, () => {
+  let delta = (add(startOfDay(add(new Date(), {days: 1})), {seconds: 1}) - new Date())
+
+  setTimeout(() => {
+    pointer.value = new Date();
+    setCalendar()
+  }, delta);
+
+}, {immediate: true})
 
 function getTileStyle(day) {
   return {
@@ -41,33 +50,33 @@ function getTileStyle(day) {
 function setCalendar() {
   daysToDisplay.value = [];
 
-  let start = startOfWeek(pointer);
+  let start = startOfWeek(pointer.value);
   let end = add(start, {days: 34})
   daysToDisplay.value = eachDayOfInterval({start: start, end: end})
 }
 
 function prevMonth() {
-  pointer = sub(pointer, {months: 1});
+  pointer.value = sub(pointer.value, {months: 1});
   setCalendar();
 }
 
 function nextMonth() {
-  pointer = add(pointer, {months: 1});
+  pointer.value = add(pointer.value, {months: 1});
   setCalendar();
 }
 
 function prevWeek() {
-  pointer = sub(pointer, {weeks: 1});
+  pointer.value = sub(pointer.value, {weeks: 1});
   setCalendar();
 }
 
 function nextWeek() {
-  pointer = add(pointer, {weeks: 1});
+  pointer.value = add(pointer.value, {weeks: 1});
   setCalendar();
 }
 
 function reset() {
-  pointer = new Date();
+  pointer.value = new Date();
   setCalendar();
 }
 
