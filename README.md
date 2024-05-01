@@ -2,6 +2,9 @@
 
 Lightweight client side web app to display customizable ics subscriptions on a kiosk monitor.
 
+![image](https://github.com/fechnert/ics-kiosk/assets/1409863/70651cb5-ef1a-4432-b644-fa8017db1708)
+
+
 
 # Features
 
