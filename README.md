@@ -1,9 +1,27 @@
 # ics-kiosk
 
-Lightweight web app to display customizable ics subscriptions on a kiosk monitor.
+Lightweight client side web app to display customizable ics subscriptions on a kiosk monitor.
 
 
-# Todo
+# Features
+
+- Subscribe to multiple `*.ics` feeds
+- Shows events summarized in calendar view
+- Shows event details in list view on the side
+- Share configuration via link
+- Kiosk ready, show on screens without input devices
+- Host it yourself, you just need to serve the staticfiles
+- No serverside application required, requests directly made to the ICS feeds
+
+
+# Caveats
+
+You have to handle CORS policy issues yourself. Either host your own CORS proxy or try to set the proper headers on the ICS source (if possible). I'm using this project so show ICS feeds coming from a hosted nextcloud instance, where it is possible to install apps like [WebAppPassword](https://apps.nextcloud.com/apps/webapppassword) to add allowed hosts.
+
+
+# What's yet to come
+
+### Todo
 
 - [x] Improve styles of calendar view
 - [x] Improve styles of list view
@@ -15,15 +33,13 @@ Lightweight web app to display customizable ics subscriptions on a kiosk monitor
 - [x] Show times in list view
 - [ ] Highlight current events in list view
 
-
-# Nice to have
+### Nice to have
 
 - [ ] Persist current calendar configuration to browser
 - [ ] Configurable reload interval per calendar
 - [ ] Better i18n support
 
-
-# Bugs to fix
+### Known bugs to fix
 
 - [x] Show events of the current week before the current day again
 - [ ] Show events accross multiple days in calendar view
