@@ -22,6 +22,17 @@ Lightweight client side web app to display customizable ics subscriptions on a k
 You have to handle CORS policy issues yourself. Either host your own CORS proxy or try to set the proper headers on the ICS source (if possible). I'm using this project so show ICS feeds coming from a hosted nextcloud instance, where it is possible to install apps like [WebAppPassword](https://apps.nextcloud.com/apps/webapppassword) to add allowed hosts.
 
 
+# Usage
+
+You can either visit and use the hosted variant of this web app via [ics-kiosk.fechner.dev](https://ics-kiosk.fechner.dev), or host it yourself via Docker:
+
+```bash
+docker run -d --restart=always -p 8080:80 --name ics-kiosk fechnert/ics-kiosk:latest
+```
+
+The app exposes port 80 within the container, map it as you like on your machine. If you want to have SSL enabled, put it behind a reverse proxy with a proper setup.
+
+
 # What's yet to come
 
 ### Todo
